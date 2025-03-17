@@ -9,6 +9,7 @@ def extract_text(image_path):
 
 # Example usage
 if __name__ == "__main__":
-    image_path = "image.jpg"  # Replace with your image file
+    image_path = "image.png"  # Replace with your image file
     extracted_text = extract_text(image_path)
     print("Extracted Text:\n", extracted_text)
+    print('==========================================')

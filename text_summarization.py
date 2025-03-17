@@ -18,7 +18,7 @@ def summarize_text(text, max_length=100, min_length=30):
 
 # Example usage
 if __name__ == "__main__":
-    image_path = "image.jpg"  # Replace with your image
+    image_path = "image.png"  # Replace with your image
     extracted_text = extract_text(image_path)
     
     print("\n🔹 Extracted Text:\n", extracted_text)
