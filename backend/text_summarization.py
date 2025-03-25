@@ -34,7 +34,7 @@ def extract_text_from_image(image_path):
 def summarize_text(text):
     """Summarizes text with dynamic length adjustments."""
     input_length = len(text.split())  # Word count
-    max_len = min(100, input_length // 2)  # Ensure summary is shorter
+    max_len = min(1000, input_length // 2)  # Ensure summary is shorter
     min_len = min(30, max_len // 2)
 
     summary = summarizer(text, max_length=max_len, min_length=min_len, do_sample=False)

@@ -6,8 +6,8 @@
     <title>AI Text Summarization</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-       /* Glassy Background */
-       .overlay {
+        /* Glassy Background */
+        .overlay {
             position: fixed;
             top: 0;
             left: 0;
@@ -101,20 +101,18 @@
             margin-top: 15px;
             color: black;
         }
-
     </style>
+
 </head>
 <body class="bg-gray-100 font-sans">
-    
-    <nav class="bg-blue-600 text-white p-4 text-center text-xl font-semibold">
+    <nav class="bg-gradient-to-r from-blue-700 to-blue-500 text-white h-20 flex items-center justify-center text-2xl font-semibold shadow-md">
         AI Text Summarization
     </nav>
-    
-    <div class="bg-yellow-300 text-center p-2 text-sm font-medium">
-        ⚠️ Only printed computer text is supported.
-    </div>
-    
-    <div class="max-w-2xl mx-auto mt-8 p-6 bg-white rounded-lg shadow-lg">
+    <div id="mainContent" class="max-w-2xl mx-auto mt-8 p-6 bg-white rounded-lg shadow-lg">
+        <div class="bg-yellow-300 text-center p-2 text-sm font-medium" id="warning">
+            ⚠️ Only printed computer text is supported.
+        </div>
+        
         <h2 class="text-2xl font-semibold text-gray-800 mb-4">Summarize Your Text</h2>
         
         <textarea id="textInput" class="w-full p-3 border rounded-md" rows="5" placeholder="Paste your text here..."></textarea>
@@ -128,11 +126,18 @@
         </div>
         
         <button onclick="summarize()" class="w-full mt-4 bg-green-500 text-white py-2 rounded text-lg">Summarize</button>
-        
-        <div id="summaryResult" class="mt-6 p-4 bg-gray-100 text-lg rounded hidden"></div>
     </div>
     
-    <!-- Loading Overlay -->
+    <div id="summaryResult" class="hidden max-w-2xl mx-auto mt-8 p-6 bg-white rounded-lg shadow-lg text-center">
+        <h2 class="text-2xl font-bold text-gray-900 mb-2">Summarized Text</h2>
+        <p id="summaryText" class="text-lg font-medium text-gray-800"></p>
+    </div>
+    <div id="homeButtonContainer" class="hidden flex justify-center mt-6">
+        <button onclick="location.reload()" id="homeButton" class="bg-blue-600 text-white px-6 py-3 rounded text-lg font-semibold animate-bounce">
+            Home
+        </button>
+    </div>
+    
     <div id="loadingOverlay" class="overlay">
         <div class="text-center">
             <div class="infinity-loader">
@@ -148,7 +153,7 @@
         function summarize() {
             let text = document.getElementById("textInput").value;
             let file = document.getElementById("fileInput").files[0];
-            
+    
             let formData = new FormData();
             if (text.trim()) {
                 formData.append("text", text);
@@ -158,9 +163,9 @@
                 alert("Please enter text or upload an image.");
                 return;
             }
-            
+    
             document.getElementById("loadingOverlay").classList.add("active");
-            
+    
             fetch("http://127.0.0.1:8000/summarize", {
                 method: "POST",
                 body: formData
@@ -168,13 +173,23 @@
             .then(response => response.json())
             .then(data => {
                 document.getElementById("loadingOverlay").classList.remove("active");
-                
-                if (data.error) {
-                    document.getElementById("summaryResult").textContent = "❌ " + data.error;
-                } else {
-                    document.getElementById("summaryResult").textContent = "✅ " + data.summary;
-                }
+                document.getElementById("mainContent").classList.add("hidden");
                 document.getElementById("summaryResult").classList.remove("hidden");
+    
+                if (data.error) {
+                    document.getElementById("summaryText").textContent = "❌ " + data.error;
+                } else {
+                    document.getElementById("summaryText").textContent = "✅ " + data.summary;
+                }
+    
+                // Show Home Button
+                let homeButton = document.getElementById("homeButtonContainer");
+                homeButton.classList.remove("hidden");
+    
+                // Stop bouncing effect after 3 seconds
+                setTimeout(() => {
+                    document.getElementById("homeButton").classList.remove("animate-bounce");
+                }, 12000);
             })
             .catch(error => {
                 document.getElementById("loadingOverlay").classList.remove("active");
