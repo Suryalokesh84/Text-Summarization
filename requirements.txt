@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+pillow
+pytesseract
+transformers
+torch
+numpy
+shutil
