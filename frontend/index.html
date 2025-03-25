@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Text Summarization</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+    
+    <!-- Navbar -->
+    <nav class="bg-blue-600 text-white p-4 text-center text-xl font-semibold">
+        AI Text Summarization
+    </nav>
+    
+    <!-- Caution Message -->
+    <div class="bg-yellow-300 text-center p-2 text-sm font-medium">
+        ⚠️ Only printed computer text is supported.
+    </div>
+    
+    <div class="max-w-2xl mx-auto mt-8 p-6 bg-white rounded-lg shadow-lg">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-4">Summarize Your Text</h2>
+        
+        <!-- Text Input -->
+        <textarea id="textInput" class="w-full p-3 border rounded-md" rows="5" placeholder="Paste your text here..."></textarea>
+        
+        <!-- OR Section -->
+        <div class="text-center my-4 text-gray-600 font-medium">OR</div>
+        
+        <!-- File Upload -->
+        <div id="dropArea" class="border-2 border-dashed p-6 text-center cursor-pointer bg-gray-50 rounded-lg">
+            <p class="text-gray-700">Drag & Drop an Image OR</p>
+            <input type="file" id="fileInput" class="hidden" accept="image/*">
+            <button onclick="document.getElementById('fileInput').click()" class="mt-2 bg-blue-500 text-white px-4 py-2 rounded">Choose File</button>
+        </div>
+        
+        <!-- Submit Button -->
+        <button onclick="summarize()" class="w-full mt-4 bg-green-500 text-white py-2 rounded text-lg">Summarize</button>
+        
+        <!-- Result Display -->
+        <div id="summaryResult" class="mt-6 p-4 bg-gray-100 text-lg rounded hidden"></div>
+    </div>
+    
+    <script>
+        function summarize() {
+            let text = document.getElementById("textInput").value;
+            let file = document.getElementById("fileInput").files[0];
+            
+            let formData = new FormData();
+            if (text.trim()) {
+                formData.append("text", text);
+            } else if (file) {
+                formData.append("file", file);
+            } else {
+                alert("Please enter text or upload an image.");
+                return;
+            }
+            
+            fetch("http://127.0.0.1:8000/summarize", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    document.getElementById("summaryResult").textContent = "❌ " + data.error;
+                } else {
+                    document.getElementById("summaryResult").textContent = "✅ " + data.summary;
+                }
+                document.getElementById("summaryResult").classList.remove("hidden");
+            })
+            .catch(error => console.error("Error:", error));
+        }
+    </script>
+</body>
+</html>

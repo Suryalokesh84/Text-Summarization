@@ -1,0 +1,3 @@
+PS S:\text-summarization\backend> uvicorn text_summarization:app --reload
+
+paste the above command to run 
